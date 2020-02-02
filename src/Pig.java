@@ -65,9 +65,8 @@ public class Pig {
      * @return Y or N based on user input
      */
     public static String getYNAnswer(Scanner kbd, String prompt) {
-        System.out.println(prompt);
+        System.out.print(prompt);
         String finalAns = kbd.next();
-        System.out.print("First Letter: " + finalAns.substring(0));
         if (Character.toUpperCase(finalAns.charAt(0)) == 'Y') {
             return Pig.YES;
         }
@@ -99,7 +98,7 @@ public class Pig {
         String answer = "";
 
         while (totalPoints < maxPoints) {
-            answer = getYNAnswer(kbd, "Roll? Y/N");
+            answer = getYNAnswer(kbd, "Roll? Y/N -> ");
             if (answer.equals(Pig.YES)) {
                 int roll = roll();
                 if (roll == 1) {
@@ -107,11 +106,15 @@ public class Pig {
                     totalPoints = 0;
                     return totalPoints;
                 }
+                if (totalPoints >= maxPoints) {
+                    System.out.println("You win!");
+                    break;
+                }
                 else {
                     totalPoints += roll;
                 }
                 System.out.println("ROLL: " + roll);
-                System.out.println("Points: " + totalPoints);
+// System.out.println("Points: " + totalPoints);
 
             }
             else if (answer.equals(Pig.NO)) {
@@ -178,24 +181,37 @@ public class Pig {
         int playerPoints = 0;
         int computerPoints = 0;
         int computerRolls;
-        System.out.println("How many points will win? -> ");
+        int compTurn;
+        int playerTurn;
+        System.out.print("How many points will win? -> ");
         maxPoints = kbd.nextInt();
-        System.out.println("How many times can the computer roll?");
+        System.out.print("How many times can the computer roll? -> ");
         computerRolls = kbd.nextInt();
         while (playerPoints <= maxPoints && computerPoints <= maxPoints) {
-
-            playerPoints += takeTurn(kbd);
-            System.out.println();
+            playerTurn = takeTurn(kbd);
+            if (playerTurn == 0) {
+                playerPoints = 0;
+            }
+            else {
+                playerPoints += playerTurn;
+            }
+            System.out.println("Player Points: " + playerPoints + "\n");
             if (playerPoints >= maxPoints) {
                 System.out.println("You win!");
                 break;
             }
-            System.out.println("Player Points: " + playerPoints);
-            computerPoints += takeComputerTurn(computerRolls);
-            System.out.println();
-            System.out.println("Computer Points: " + computerPoints);
+            compTurn = takeComputerTurn(computerRolls);
+            if (compTurn == 0) {
+                computerPoints = 0;
+            }
+            else {
+                computerPoints += compTurn;
+            }
+            System.out.println("Computer Points: " + computerPoints + "\n");
+
             if (computerPoints >= maxPoints) {
                 System.out.println("You lose :=(");
+                break;
             }
 
         }
